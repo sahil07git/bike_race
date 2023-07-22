@@ -1,0 +1,95 @@
+#include<iostream>
+#include<conio.h>
+#include<windows.h>
+
+using namespace std;
+
+const int roadWidth = 20;
+const int roadHeight = 10;
+const int bikeStartpos = roadWidth / 2;
+
+
+int bikePosition = bikeStartpos;
+char road[roadHeight][roadWidth];
+
+void Setup()
+{
+    for (int i = 0; i < roadHeight; i++)
+    {
+        for (int j = 0; i < roadWidth; j++)
+        {
+            if (j == 0 || j == roadWidth - 1)
+            road[i][j] = '|';
+            else
+            road[i][j] = ' ';
+        }
+    }
+}
+
+void Draw()
+{
+    system("cls");
+    for (int i = 0; i < roadHeight; i++)
+    {
+        for (int j = 0; j < roadWidth; j++)
+        {
+            if (i == roadHeight - 1)
+            {
+                if (j == bikePosition)
+                cout << 'V';
+                else
+                cout << '_';
+            }
+            else
+            cout << road[i][j];
+        }
+        cout << endl;
+    }
+}
+
+void Input()
+{
+    if (_kbhit())
+    {
+        char key = _getch();
+        if (key == 'a' && bikePosition > 1)
+        bikePosition--;
+        if (key == 'd' && bikePosition < roadWidth - 2)
+        bikePosition++;
+        if (key == 'x')
+        exit(0);
+    }
+}
+
+void Logic()
+{
+    for (int i = roadHeight - 2; i>=0; i--)
+    {
+        for (int j = 1; j < roadWidth - 1; j++)
+        {
+            if (road[i][j] == 'V')
+            {
+                if (road[i + 1][j] == '|' || road[i + 1][j] == 'V')
+                {
+                    cout << "Game Over!" << endl;
+                    exit(0);
+                }
+                road[i + 1][j] = 'V';
+                road[i][j] = ' ';
+            }
+        }
+    }
+}
+
+int main()
+{
+    Setup();
+    while (true)
+    {
+        Draw();
+        Input();
+        Logic();
+        Sleep(50); //Adjust the speed of the game here (milliseconds)
+    }
+    return 0;
+}
